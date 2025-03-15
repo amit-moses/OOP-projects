@@ -1,0 +1,86 @@
+emmanuelle,amit.moses1
+
+
+#1 Classes
+- **WrappedImage**: Extends the `Image` class to add padding to images, ensuring their dimensions
+  are powers of two. Using WrappedImage as an inheritance class saves memory space by creating
+  virtual white padding instead of adding actual white pixels to the image, reducing
+  the need for additional storage in memory.
+- **SubImgCharMatcher**: Matches the sub-images brightness to characters based on their brightness values.
+- **Image**: Represents an image and provides methods to manipulate and retrieve information
+  (specifically about its pixels) about the image.
+- **Shell**: Manages user commands and executes the corresponding actions for the ASCII
+  art conversion process. Contains asciiArtAlgorithm instance.
+- **SubImages**: Divides an image into sub-images and calculates their brightness.
+
+
+- **AsciiArtAlgorithm**: Converts images to ASCII art using a specified character set and resolution.
+  Contains subImageMatcher instance inorder to match the subImages brightness to characters.
+  - **AsciiArtAlgorithm.Snapshot**: Represents a snapshot of the ASCII art conversion process (Memento ).
+    Contains subImageMatcher,subImages,images instance.
+- **AsciiArtDB**: Saves snapshots - manages the database of ASCII art subImage brightness according
+  to specific resolution and image (Singleton). This way when the user runs the same image with the
+  same resolution it retrieves all the sub images brightnesses values from the database instead of
+  calculating them again. Implements a singleton pattern to efficiently manage and reuse
+  snapshots of sub-image brightness calculations, significantly reducing redundant computations
+  and saving processing time.
+- **HtmlAsciiOutput**: Outputs the ASCII art to an HTML file.
+- **ConsoleAsciiOutput**: Outputs the ASCII art to the console.
+- **KeyboardInput**: Handles reading input from the user.
+- **CharConverter**: Converts characters to boolean arrays for brightness calculation.
+
+- **InvalidFileException**: Extends IOException, a custom exception class for
+  handling invalid file of an image error.
+- **UserInputException**: Extends Exception, a custom exception class for handling user input errors.
+
+#2 Data Structures
+- **SubImgCharMatcher**:
+    add new character: O(log(n))
+    remove character: O(log(n))
+    check if contains character: O(1)
+    get char round down/up/abs to brightness: O(log(n))
+    space complexity: O(n)
+
+    - TreeMap<Double, PriorityQueue<Character>>: Maps brightness values to characters
+      that hold the same the brightness values.
+      We used PriorityQueue in order to get the char with the minimum ASCII value in O(1) time.
+      We used TreeMap in order to get the round up, down, absolute value of the brightness in O(log(n)) time.
+      We inserted into the data structures the original brightness value of the character, and in addition
+      we saved the maximum and minimum brightness values, in order to find the adjusted one
+      thus we saved running time by not updating all the values.
+
+      TreeMap that maps brightness values to characters that hold the same brightness values.
+      Implements a binary search tree to efficiently match sub-image brightness values to characters.
+      The AVL tree with normalized values has the same structure as the original values tree.
+      In this method, there is no need to calculate a separate normalized tree.
+      so we used the comparator in the TreeMap to conditionally compare brightness values based on the
+      normalize flag. When normalize is true, the comparator uses the normalized brightness values for
+      comparison; otherwise, it uses the raw brightness values. This ensures that the brightness values
+      are compared correctly depending on whether normalization is required.
+
+    - HashMap<Character, Double>: Maps char to its brightness value.
+      We used HashMap in order to check if it contains the char and to
+      get a chars brightness value in O(1) time.
+
+- **AsciiArtDB**:
+    - LinkedList<AsciiArtAlgorithm.Snapshot> : Saves the snapshots of the ASCII art conversion process.
+      We used LinkedList in order to find the last snapshot in O(1) time.
+
+
+#3 Exceptions
+We implemented two classes of exceptions as explained above; InvalidFileException, UserInputException.
+In the class Image we throw an InvalidFileException if the file is invalid, we catch
+this exception when trying to read the file in class Shell.
+This and in case of an invalid input in 'run' function of class Shell, we throw and
+catch an UserInputException with a specific message according to the error.
+
+#4 SubImageMatcher API extension:
+- **setTypeRound**: Returns the type of rounding used when matching brightness values to characters.
+- **isCharContain**: Returns if the specified character is present in the matcher.
+- **getSize**: Returns the number of characters in the matcher.
+- **getCharacters**: Returns a set containing all chars in the matcher.
+- **addChar**: Adds a character to the matcher with its brightness value (calculates it).
+- **removeChar**: Removes a character from the matcher.
+
+#5 Additional Changes In The Supplied Code-
+We didn't make any changes in the supplied code, only added documentation and comments.

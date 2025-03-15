@@ -1,0 +1,77 @@
+emmanuelle,amit.moses1
+
+
+We added a bird just for fun!
+Question 10.2.4.1:
+#Flora Class
+Manages the creation and placement of trees, leafs and apples within the game world.
+It ensures that flora is generated within the specified range and interacts with the terrain.
+
+#Tree Class
+Represents individual trees in the game. It handles the tree's growth and rendering within the game world.
+
+#Leaf Class
+Represents individual leaves in the game. It handles the leaf's behavior,
+including transitioning as if the leafs are moving with the wind.
+
+#Fruit Class
+Represents apples in the game.
+When avatar "eats" the apple, the apple cant be seen and eaten for 30 seconds and the
+avatar's energy is increased.
+
+#Trunk Class
+Represents the trunk of a tree in the game.
+It handles the trunk's growth and rendering within the game world.
+
+Extra Question:
+#Clouds creation (our program has several clouds that are created and removed from the screen)
+1. **Clouds creation**:
+   -The PepseGameManager class uses a schedule in order to create a new cloud every 5 seconds.
+   It uses the camera boundaries inorder to place the cloud.
+   - A new `Cloud` object is created with the calculated position and a callback method
+   (`removeCloudBlock`) to handle its removal (if it goes out of the screen boundaries).
+
+2. **Clouds Transition**:
+   - The `Cloud` class likely uses transition to animate its movement across the screen.
+   This ensures that clouds move smoothly and realistically within the game world, repeats the transition
+   when the cloud is still in the screen and removes the cloud when it is out of the screen.
+
+3. **Clouds Rain**:
+    - The avatar holds a callback that is called when the avatar jumps. This callback is used to create
+    rain from clouds that are visible on screen.
+
+
+Question 10.2.4.2
+1. **`Flora`**:
+   - Connects with Tree Class in order to create and manage trees.
+   - Connects with Terrain Class in order to place trees on the terrain in a specific range
+     and a specific position.
+
+2. **`Tree`**:
+   - Uses the `Trunk` and `Leaf` and 'Fruit' classes to create and manage the tree's structure,
+   its fruits and leafs, in a specific range and a specific position.
+
+3. **`Leaf`**:
+   - Is part of a tree and is managed by the `Tree` class.
+
+4. **Fruit**:
+   - Is part of a tree and is managed by the `Tree` class.
+   - Interacts with the `Avatar` class to increase the avatar's energy when eaten(receives callbacks
+    that are able to change the avatars energy state in any given time).
+
+5. **`Trunk`**:
+   - Extends Class 'Block', defines the trunks color, size and position.
+   - Is part of a tree and is managed by the `Tree` class.
+
+These classes work together to create a dynamic and interactive tree system within the game,
+with `Flora` serving as the central manager that coordinates the creation and placement of trees
+and their components.
+
+
+Question 10.2.4.3
+#Obserever
+In our project, the `TempObjectObserver` interface is used to manage temporary objects like tree,
+clouds and birds. These objects implement the `update` method to handle their addition and removal
+from the game world. The `Tree` and `Cloud` classes implement this interface to ensure they are updated
+and managed correctly within the game. while restriction of the infinite world view , the observer is used
+to manage the temporary objects in the game world, ensuring they are updated and removed when necessary.
