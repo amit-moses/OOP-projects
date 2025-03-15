@@ -1,0 +1,40 @@
+emmanuelle,amit.moses1
+
+
+Dealing with function declaration and calls in Sjavac:
+The program handles function matching in two stages. In the first stage, collects all function definitions and
+store them in a class called FunctionMatcher.
+This class uses a regular expression to identify and capture function names and their parameters.
+In the first stage of the FunctionMatcher, a regular expression is used to match
+function definitions in the source code.
+The regular expression ([a-zA-Z][a-zA-Z_0-9]*)\\s*\\((.*)\\) *; is used to match function definitions,
+where the first capturing group captures the function name and the second group captures the parameters.
+Using this regex, the program also checks the types of the parameters inside the function declaration.
+An exception is thrown if the parameters are not of the correct format.
+In the second stage, the FunctionMatcher is used to validate all function calls.
+This involves checking if the function calls match the parameters defined in the first stage.
+By separating the collection and validation stages, I ensure that all function
+definitions are known before validating the calls, allowing for accurate and comprehensive validation.
+
+Dealing with delegations in Sjavac:
+A regular expression is used to handle delegation by matching lines that start with one of the enum types
+defined in the Type enum.
+The regular expression is designed to identify and capture the type,
+knowing its a delegation I move on to verifying its variable name.
+The regular expression for delegation is structured as follows:
+([a-zA-Z][a-zA-Z_0-9]*)|(_+[a-zA-Z_0-9]+)": This part matches the variable name,
+which starts with a letter or underscore,
+followed by any combination of letters, digits, and underscores.
+In the last stage the program moves on to verifying its initialization.
+It is done using patterns that match each specific Type:
+INT_PATTERN = ("[+-]?[0-9]+");
+STRING_PATTERN = Pattern.compile("\"[^\"]*\"");
+BOOLEAN_PATTERN = Pattern.compile("(true|false|[+-]?[0-9]*.?[0-9]+)");
+DOUBLE_PATTERN = Pattern.compile("[+-]?[0-9]*\\.?[0-9]+");
+CHAR_PATTERN = Pattern.compile("'.'");
+This is also seperated into two stages, first checking if the
+initialization is a cast, if it is it checks if the cast is valid (has the same type and the
+variable was initialized before hand).
+If the initialization is not a cast it checks if the number/word is of the same type of the delegation.
+Also making sure to check for double declarations.
+The mechanism throws exceptions with a detailed explanation of the error.
